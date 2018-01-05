@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Dee van der Knaap</title>
+    <link>/tags/r/</link>
+    <description>Recent content in R on Dee van der Knaap</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Jan 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Creating maps using Leaflet for R: Who participates in online experiments?</title>
+      <link>/creating-maps-using-leaflet-for-r-who-participates-in-online-experiments/</link>
+      <pubDate>Fri, 05 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/creating-maps-using-leaflet-for-r-who-participates-in-online-experiments/</guid>
+      <description>One of my goals last semester, aside from learning a ton more statistical methods in R in my Applied Data Analysis and Statistical Inference class, was to get more hands-on experience creating automated visualization tools. The goal was two-fold: to learn to play around (and fight with) tools in R and Python, as well as to hopefully create web-based data tools that could contribute to the open-science community and make data visualization simpler and instantaneous for anyone with an internet connection.</description>
+    </item>
+    
+  </channel>
+</rss>

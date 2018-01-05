@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.32.2" />
+
+
+<title>Creating maps using Leaflet for R: Who participates in online experiments? - Dee van der Knaap</title>
+<meta property="og:title" content="Creating maps using Leaflet for R: Who participates in online experiments? - Dee van der Knaap">
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/dvanderk">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/ddVDK">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">4 min read</span>
+    
+
+    <h1 class="article-title">Creating maps using Leaflet for R: Who participates in online experiments?</h1>
+
+    
+    <span class="article-date">0001/01/01</span>
+    
+
+    <div class="article-content">
+      <p>One of my goals last semester, aside from learning a ton more statistical methods in R in my <em>Applied Data Analysis and Statistical Inference</em> class, was to get more hands-on experience creating automated visualization tools. The goal was two-fold: to learn to play around (and fight with) tools in R and Python, as well as to hopefully create web-based data tools that could contribute to the open-science community and make data visualization simpler and instantaneous for anyone with an internet connection.</p>
+
+<p>One thing I&rsquo;ve always loved is maps. As a third-culture kid growing up, I always loved visualizations showing how people all over the world has taken a particular poll, used a particular product, infant birth rates, etc. If my school had offered it I probably would have majored in Demography. My psychology advisor, Professor Jeremy Wilmer, has been working on the TestMyBrain project since his graduate school days at Harvard, and has amassed a spectacular amount of data, including latitude and longitude of participants in many of the tasks on the site. I was curious - what was the distribution of people taking the tasks on the site? Would it be mostly those from &ldquo;developed&rdquo; portions of the world&rdquo; or would the distribution of participants be relatively evenly spread throughout the world? While a visualization doesn&rsquo;t provide a quantitative, definitive answer, I was hoping the distribution would be binary enough (either only in developed countries <strong>or</strong> spanning the whole world) to generally answer my question.</p>
+
+<p>After playing around with various mapping packages in R such as maps and ggmap, I decided to use Leaflet because (a) I could view the whole world in one map, (b) the map was clean, making it easy to see the dots that represented participants, and &copy; the dots could be vectorized, allowing users to zoom in and view more precise locations of individuals.</p>
+
+<p>The first hurdle was deciding how I wanted to use the data I had. The data from TestMyBrain is outputted in csv format (hallelujah). Since I knew I wanted to eventually make whatever I built friendly to the outside world, I was hoping to force them to do as little extra formatting as possible. Thus, my first step was to extract only what I thought would be necessary later on from the csv and create a new data frame.</p>
+
+<pre><code class="language-r clean data, echo = TRUE">library(leaflet)
+library(maps)
+
+#read in data file
+data&lt;-(read.csv(&quot;/Users/deevanderknaap/Desktop/Organized/Wellesley 2017-2018/Classes - Fall/PSYC 350/RTools/MapTools/SERP_Data.csv&quot;, header = TRUE))[-1,]
+#select onlyt the ID, Latitude, Longitude
+idlatlong &lt;- subset(data, select=c(&quot;ID&quot;, &quot;Latitude&quot;, &quot;Longitude&quot;)) 
+#remove NaN values
+idlatlong &lt;-na.omit(idlatlong)
+
+#create vectors of latitutde and longitude for ease of use
+lon &lt;- as.numeric(idlatlong$Longitude)
+lat &lt;- as.numeric(idlatlong$Latitude)
+df &lt;- as.data.frame(cbind(lon,lat))
+</code></pre>
+
+<p>After doing this, building the map with Leaflet was relatively straighforward. Using the documentation, I created a map and simply plotted my latitude and longitude pairs in the dataframe I had made earlier. I wanted to use the default map view since for my purposes I just needed something clean and user friendly. However I found that the default tiles were havign trouble showing up in the browser (see: <a href="https://stackoverflow.com/questions/47401718/leaflet-map-not-rendering-in-rmarkdown-r-notebook-when-opened-in-browser">https://stackoverflow.com/questions/47401718/leaflet-map-not-rendering-in-rmarkdown-r-notebook-when-opened-in-browser</a>) so I decided to use a very similar third-party tile style.</p>
+
+<pre><code class="language-r map, echo = TRUE">#create map with lat and long dataframe
+worldmap = data(worldMapEnv)
+m &lt;- leaflet(data =df)
+#add tiles to view the map
+m &lt;- addTiles(m, urlTemplate = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png')
+#create circles object
+m &lt;- addCircles(m) #create circles objetc
+#add our longitutde and latitude to the map
+m &lt;- addCircles(m, lng = ~lon, lat = ~lat, radius = 30) #radius in meters, changes as user zooms
+#display map
+m
+</code></pre>
+
+<p>Thus, a map is made containing coordinates of our users!</p>
+
+<p>So what is the map showing us? In general, more people in highly developed countries are using TestMyBrain. However, I don&rsquo;t necessarily think this is due to higher interest. One of the main trends is that countries where English is the national language or English is taught in schools have high participation rates. This explans not only the higher participation rates in the USA, England, and North America, but also the high participation rate in the Indian subcontinent. The reason for this is obvious and points to a key issue: TestMyBrain is available only in English. One way to possibly attract more diverse users would be to offer other language options and hopefully in the future detect the user&rsquo;s location and open the site in that country&rsquo;s language (with an option to switch to English or any other language). This is just one example of an insight that can be generated making just a simple visualization. Though we all get excited about</p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
