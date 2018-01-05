@@ -26,7 +26,8 @@
       <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
       
       <guid>/about/</guid>
-      <description>I am a current student at Wellesley College with eclectic interests in statistics, health, innovation &amp;amp; development, and ethics. I am passionate about data science, open science initiatives, reproducibility, epidemiology, and neuroscience.
+      <description>I am a current student at Wellesley College with eclectic interests in statistics, health, innovation &amp;amp; development, and ethics.
+I am passionate about data science, open science initiatives, reproducibility, epidemiology, and neuroscience.
 Read my blog to follow my personal musings and projects.
 Website style based off of example website for the blogdown package. The theme was forked from @jrutheiser/hugo-lithium-theme and modified by Yihui Xie.</description>
     </item>
